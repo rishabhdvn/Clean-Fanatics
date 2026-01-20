@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Booking {
+  id          String   @id @default(uuid())
+  customer    String   @default("Customer A") 
+  provider    String?  
+  service     String
+  status      String   @default("PENDING") 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  logs        AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  bookingId String
+  action    String
+  details   String
+  timestamp DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+}
